@@ -10,11 +10,14 @@ def check_keydown_events(event, ai_settings, screen, ship, bullets):
 	if event.key == pygame.K_RIGHT:
 		# Move the ship to the right.
 		ship.moving_right = True
-	if event.key == pygame.K_LEFT:
+	elif event.key == pygame.K_LEFT:
 		# Move the ship to the left.
 		ship.moving_left = True
 	if event.key == pygame.K_SPACE:
 		fire_bullet(ai_settings, screen, ship, bullets)
+	if event.key == pygame.K_q:
+		sys.exit()
+	
 
 def fire_bullet(ai_settings, screen, ship, bullets):
 		# Create a new bullet and add it to the bullets group.
