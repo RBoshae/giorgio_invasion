@@ -1,10 +1,12 @@
 import sys
 from time import sleep
 
+import random
+
 import pygame
 
-from bullet import Bullet
-from alien import Alien
+from src.bullet import Bullet
+from src.alien import Alien
 
 def ship_hit(ai_settings, screen, stats, sb, ship, aliens, bullets):
 	"""Respond to ship being hit by alien."""
@@ -26,6 +28,7 @@ def ship_hit(ai_settings, screen, stats, sb, ship, aliens, bullets):
 		#Payse.
 		sleep(0.5)
 	else:
+		pygame.mixer.Sound('./sound/game_over_arcade.wav').play()
 		stats.game_active = False
 		pygame.mouse.set_visible(True)
 
@@ -108,6 +111,7 @@ def fire_bullet(ai_settings, screen, ship, bullets):
 		# Create a new bullet and add it to the bullets group.
 		if len(bullets) < ai_settings.bullets_allowed:
 			new_bullet = Bullet(ai_settings, screen, ship)
+			new_bullet.play_sound()
 			bullets.add(new_bullet)
 
 def check_keyup_events(event, ship):
@@ -139,6 +143,9 @@ def check_play_button(ai_settings, screen, stats, sb, play_button, ship, aliens,
 	"""Start a new game when the player clicks Play."""
 	button_clicked = play_button.rect.collidepoint(mouse_x, mouse_y)
 	if button_clicked and not stats.game_active:
+		# Play sound effect
+		pygame.mixer.Sound('./sound/lets-start.wav').play()
+
 		# Reset the game settings.
 		ai_settings.initialize_dynamic_settings()
 
@@ -193,10 +200,14 @@ def check_bullet_alien_collisions(ai_settings, screen, stats, sb, ship, aliens,
 		for aliens in collisions.values():
 			stats.score += ai_settings.alien_points * len(aliens)
 			sb.prep_score()
+			pygame.mixer.Sound('./sound/death.wav').play()
 		check_high_score(stats,sb)
 
 	if len(aliens) == 0:
-		# If the entier fleet is desroyed, start a new level.
+		# If the entjire fleet is destroyed, start a new level.
+		round_won_fx = random.choice(['./sound/amazing.wav', './sound/ko.wav', './sound/just_started.wav',
+									  './sound/21.wav', './sound/dayum.wav', './sound/fuck_yeah.wav'])
+		pygame.mixer.Sound(round_won_fx).play()
 		bullets.empty()
 		ai_settings.increase_speed()
 
@@ -218,6 +229,7 @@ def update_aliens(ai_settings, screen, stats, sb, ship, aliens, bullets):
 	# Look for alien-ship collisions.
 	if pygame.sprite.spritecollideany(ship, aliens):
 		ship_hit(ai_settings, screen, stats, sb, ship, aliens, bullets)
+		pygame.mixer.Sound('./sound/RossHit.wav').play()
 		print("Ross hit!!!")
 	
 	# Look for aliens hitting the bottom of the screen

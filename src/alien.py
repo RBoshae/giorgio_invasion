@@ -11,7 +11,7 @@ class Alien(Sprite):
 		self.ai_settings = ai_settings
 
 		# Load the alien image and set its image
-		self.image = pygame.image.load('../images/GiosHead.bmp')
+		self.image = pygame.image.load('./images/GiosHead.bmp')
 		self.rect = self.image.get_rect()
 
 		# Start each new alien near the top of the left of the screen
@@ -28,7 +28,6 @@ class Alien(Sprite):
 			return True
 		elif self.rect.left <=0:
 			return True
-		
 
 	def update(self):
 		"""Move the alien right or left."""
